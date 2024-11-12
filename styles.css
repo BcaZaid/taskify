@@ -1,0 +1,36 @@
+/* Additional Styling */
+body {
+    font-family: Arial, sans-serif;
+}
+
+/* Task Item Styling */
+.task-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+}
+
+.task-item .task-actions button {
+    margin-left: 5px;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.task-item .task-actions .finish-btn {
+    color: #fff;
+    background-color: green;
+    border: none;
+}
+
+.task-item .task-actions .delete-btn {
+    color: #fff;
+    background-color: red;
+    border: none;
+}

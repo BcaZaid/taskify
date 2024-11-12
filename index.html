@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taskify</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">Taskify</a>
+        <div class="ml-auto">
+            <button class="btn btn-light mr-2">Login</button>
+            <button class="btn btn-outline-light">Register</button>
+        </div>
+    </nav>
+
+    <!-- Profile Management Section -->
+    <section class="container my-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Profile Management</h5>
+            </div>
+            <div class="card-body d-flex align-items-center">
+                <img src="https://via.placeholder.com/100" alt="Profile Picture" class="rounded-circle mr-4">
+                <div>
+                    <h5>John Doe</h5>
+                    <p>johndoe@example.com</p>
+                    <button class="btn btn-primary">Edit Profile</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Todo Module Section -->
+    <section class="container">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Todo Module</h5>
+            </div>
+            <div class="card-body">
+                <div class="input-group mb-3">
+                    <input type="text" id="task-input" class="form-control" placeholder="Add a new task">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" onclick="addTask()">Add Task</button>
+                    </div>
+                </div>
+                <div id="task-list">
+                    <!-- Tasks will be added here dynamically -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bootstrap and Custom Script -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
