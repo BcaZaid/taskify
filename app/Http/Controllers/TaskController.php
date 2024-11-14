@@ -15,7 +15,9 @@ class TaskController extends Controller
      */
     public function index(): View
     {
-        return View('tasks.index');
+        return View('tasks.index', [
+            'tasks' => Task::with('user')->latest()->get(),
+        ]);
     }
 
     /**
@@ -29,14 +31,14 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request):RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'message' => 'required|string|max:255',
         ]);
- 
+
         $request->user()->tasks()->create($validated);
- 
+
         return redirect(route('tasks.index'));
     }
 
