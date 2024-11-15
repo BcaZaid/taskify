@@ -53,7 +53,8 @@ class TaskPolicy
      */
     public function restore(User $user, Task $task): bool
     {
-        //
+        // Temporarily deny the action 
+        return false;
     }
 
     /**
@@ -61,6 +62,7 @@ class TaskPolicy
      */
     public function forceDelete(User $user, Task $task): bool
     {
-        //
+        // Temporarily deny the action 
+        return false;
     }
 }
