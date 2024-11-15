@@ -88,4 +88,18 @@ class TaskController extends Controller
         $task->delete();
         return redirect(route('tasks.index'));
     }
+
+    // Reorder for drag and drop
+
+    public function reorder(Request $request)
+    {
+        $tasks = $request->tasks; // Array of task IDs in the new order
+
+        foreach ($tasks as $index => $taskId) {
+            Task::where('id', $taskId)->update(['position' => $index]);
+        }
+
+        return response()->json(['status' => 'success']);
+    }
+
 }

@@ -27,6 +27,8 @@ Route::get('/auth/google/callback', function () {
     return redirect('/dashboard');
 })->name('google.callback');
 
+Route::post('/tasks/reorder', [TaskController::class, 'reorder'])->name('tasks.reorder');
+
 Route::get('/', function () {
     return view('welcome');
 });
