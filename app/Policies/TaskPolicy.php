@@ -13,7 +13,8 @@ class TaskPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        // Temporarily deny the action 
+        return false;
     }
 
     /**
@@ -21,7 +22,8 @@ class TaskPolicy
      */
     public function view(User $user, Task $task): bool
     {
-        //
+        // Temporarily deny the action 
+        return false;
     }
 
     /**
@@ -29,7 +31,8 @@ class TaskPolicy
      */
     public function create(User $user): bool
     {
-        //
+        // Temporarily deny the action 
+        return false;
     }
 
     /**
