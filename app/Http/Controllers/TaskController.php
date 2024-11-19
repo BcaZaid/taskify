@@ -9,24 +9,24 @@ class TaskController extends Controller
 {
     public function store(Request $request)
     {
-        // Validate the request
         $request->validate([
             'task' => 'required|string|max:255',
         ]);
 
-        // Create a new task
         Task::create([
             'task' => $request->task,
+            'user_id' => auth()->id(),  // Associate task with the authenticated user
         ]);
 
-        // Redirect back with a success message
         return redirect()->back()->with('success', 'Task added successfully!');
     }
+
     public function index()
     {
-        $tasks = Task::orderBy('created_at', 'asc')->get();
+        $tasks = Task::where('user_id', auth()->id())->orderBy('order')->get();
         return view('tasks.index', compact('tasks'));
     }
+
     public function edit(Task $task)
     {
         return view('tasks.edit', compact('task'));
@@ -55,16 +55,16 @@ class TaskController extends Controller
         return redirect()->route('tasks.index')->with('success', 'Task deleted successfully!');
     }
     public function reorder(Request $request)
-{
-    $order = $request->input('order');
+    {
+        $order = $request->input('order');
 
-    foreach ($order as $index => $id) {
-        $task = Task::find($id);
-        $task->order = $index;
-        $task->save();
+        foreach ($order as $index => $id) {
+            $task = Task::find($id);
+            $task->order = $index;
+            $task->save();
+        }
+
+        return response()->json(['success' => true]);
     }
-
-    return response()->json(['success' => true]);
-}
 
 }
