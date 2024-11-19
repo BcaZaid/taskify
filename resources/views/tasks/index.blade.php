@@ -74,6 +74,25 @@
                 }
             });
         </script>
+        <script>
+            function toggleTaskCompletion(taskId) {
+                fetch(`/tasks/${taskId}/toggle`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload(); // Reload the page to reflect changes 
+                        } else {
+                            alert('An error occurred while updating the task.');
+                        }
+                    });
+            }
+        </script>
     @endauth
     @guest
         <p>Please <a href="{{ route('login') }}">log in</a> to manage your tasks.</p>
