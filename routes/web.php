@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::put('/profile/picture', [ProfileController::class, 'updatePicture'])->name('profile.update.picture'); // New route for updating profile picture
 });
 
 Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
