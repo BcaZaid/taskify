@@ -2,104 +2,69 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Task;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\View\View;
+use App\Models\Task;
 
 class TaskController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(): View
+    public function store(Request $request)
     {
-        return View('tasks.index', [
-            'tasks' => Task::where('user_id', auth()->id())->latest()->get(),
-        ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request): RedirectResponse
-    {
-        $validated = $request->validate([
-            'message' => 'required|string|max:255',
+        // Validate the request
+        $request->validate([
+            'task' => 'required|string|max:255',
         ]);
 
-        $request->user()->tasks()->create($validated);
-
-        return redirect(route('tasks.index'));
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Task $task)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Task $task): View
-    {
-        Gate::authorize('update', $task);
-
-        return view('tasks.edit', [
-            'task' => $task,
-        ]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Task $task): RedirectResponse
-    {
-        Gate::authorize('update', $task);
-
-        $validated = $request->validate([
-            'message' => 'required|string|max:255',
+        // Create a new task
+        Task::create([
+            'task' => $request->task,
         ]);
 
-        $task->update($validated);
-
-        return redirect(route('tasks.index'));
+        // Redirect back with a success message
+        return redirect()->back()->with('success', 'Task added successfully!');
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Task $task): RedirectResponse
+    public function index()
     {
-        Gate::authorize('delete', $task);
+        $tasks = Task::orderBy('created_at', 'asc')->get();
+        return view('tasks.index', compact('tasks'));
+    }
+    public function edit(Task $task)
+    {
+        return view('tasks.edit', compact('task'));
+    }
+    public function update(Request $request, Task $task)
+    {
+        // Validate the request
+        $request->validate([
+            'task' => 'required|string|max:255',
+        ]);
+
+        // Update the task
+        $task->update([
+            'task' => $request->task,
+        ]);
+
+        // Redirect back with a success message
+        return redirect()->route('tasks.index')->with('success', 'Task updated successfully!');
+    }
+    public function destroy(Task $task)
+    {
+        // Delete the task
         $task->delete();
-        return redirect(route('tasks.index'));
+
+        // Redirect back with a success message
+        return redirect()->route('tasks.index')->with('success', 'Task deleted successfully!');
     }
-
-    // Reorder for drag and drop
-
     public function reorder(Request $request)
-    {
-        $tasks = $request->tasks; // Array of task IDs in the new order
+{
+    $order = $request->input('order');
 
-        foreach ($tasks as $index => $taskId) {
-            Task::where('id', $taskId)->update(['position' => $index]);
-        }
-
-        return response()->json(['status' => 'success']);
+    foreach ($order as $index => $id) {
+        $task = Task::find($id);
+        $task->order = $index;
+        $task->save();
     }
+
+    return response()->json(['success' => true]);
+}
 
 }
