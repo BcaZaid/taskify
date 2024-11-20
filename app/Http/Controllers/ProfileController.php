@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use App\Models\Document;
 use App\Models\User;
 
 class ProfileController extends Controller
@@ -80,5 +81,26 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+    public function updateDocuments(Request $request)
+    {
+        $request->validate([
+            'documents.*' => 'required|file|mimes:jpeg,png,jpg,gif|max:2048' // Updated validation for images
+        ]);
+
+        if ($request->hasFile('documents')) {
+            foreach ($request->file('documents') as $file) {
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $filePath = $file->storeAs('documents', $fileName, 'public');
+
+                // Save document details in the database 
+                Document::create([
+                    'user_id' => Auth::id(),
+                    'file_path' => $filePath
+                ]);
+            }
+        }
+
+        return redirect()->route('profile.edit')->with('success', 'Images uploaded successfully!');
     }
 }
