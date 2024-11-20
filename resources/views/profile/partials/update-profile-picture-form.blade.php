@@ -1,4 +1,7 @@
 <div class="mt-4">
+    @if (session('profile_success'))
+        <div class="bg-green-500 text-white p-4 rounded mb-4"> {{ session('profile_success') }} </div>
+    @endif
     <form action="{{ route('profile.update.picture') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')

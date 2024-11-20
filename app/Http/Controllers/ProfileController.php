@@ -60,7 +60,7 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return redirect()->back()->with('success', 'Profile picture updated successfully!');
+        return redirect()->back()->with('profile_success', 'Profile picture updated successfully!');
     }
     /**
      * Delete the user's account.
