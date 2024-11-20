@@ -24,8 +24,9 @@
                         <h3 class="text-lg font-semibold text-gray-800 mb-4">Task List</h3>
                         <ul id="task-list">
                             @foreach ($tasks as $task)
-                                <li class="flex justify-between items-center mb-2 p-2 border rounded bg-gray-100"
-                                    data-id="{{ $task->id }}">
+                                <li class="flex justify-between items-center mb-2 p-2 border rounded bg-gray-100 {{ $task->completed ? 'completed' : '' }}"
+                                    data-id="{{ $task->id }}"
+                                    onclick="toggleTaskCompletion(event, {{ $task->id }})">
                                     <span>{{ $task->task }}</span>
                                     <div class="flex items-center space-x-2">
                                         <a href="{{ route('tasks.edit', $task->id) }}"
@@ -41,7 +42,6 @@
                                 </li>
                             @endforeach
                         </ul>
-
                     </div>
                 </div>
             </div>
@@ -77,23 +77,36 @@
         <script>
             function toggleTaskCompletion(event, taskId) {
                 event.stopPropagation();
+                const taskElement = document.querySelector(`li[data-id="${taskId}"]`);
+                taskElement.classList.toggle('completed');
+
+                // Optionally, you can update the backend about the task completion status
                 fetch(`/tasks/${taskId}/toggle`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            location.reload(); // Reload the page to reflect changes 
-                        } else {
-                            alert('An error occurred while updating the task.');
-                        }
-                    });
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                }).then(response => response.json()).then(data => {
+                    if (data.success) {
+                        taskElement.classList.toggle('completed', data.completed);
+                    } else {
+                        alert('An error occurred while updating the task.');
+                    }
+                });
             }
         </script>
+
+        {{-- CSS to apply the strikethrough effect for completed tasks --}}
+        <style>
+            .task span {
+                margin: 0;
+            }
+
+            .completed span {
+                text-decoration: line-through;
+            }
+        </style>
     @endauth
     @guest
         <p>Please <a href="{{ route('login') }}">log in</a> to manage your tasks.</p>

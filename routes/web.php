@@ -53,7 +53,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
     Route::post('/tasks/reorder', [TaskController::class, 'reorder'])->name('tasks.reorder');
-    Route::post('/tasks/{task}/toggle', [TaskController::class, 'toggle'])->name('tasks.toggle');
+    Route::post('/tasks/{id}/toggle', [TaskController::class, 'toggleTask'])->name('tasks.toggle');
 });
 
 require __DIR__ . '/auth.php';
