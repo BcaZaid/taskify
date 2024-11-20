@@ -9,12 +9,12 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 @if (Auth::user()->profile_picture)
-                    <div class="mt-2 float-right">
+                    <div class="mt-2 mr-2 float-right">
                         <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt="Profile Picture"
                             class="rounded-full w-32 h-32">
                     </div>
                 @else
-                    <div class="mt-2 rem float-right">
+                    <div class="mt-2 mr-2 float-right">
                         <img src="{{ asset('default-profile.png') }}" alt="Default Profile Picture"
                             class="rounded-full w-32 h-32">
                     </div>
