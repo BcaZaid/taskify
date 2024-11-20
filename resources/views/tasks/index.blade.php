@@ -27,7 +27,7 @@
                                 <li class="flex justify-between items-center mb-2 p-2 border rounded bg-gray-100"
                                     data-id="{{ $task->id }}">
                                     <span>{{ $task->task }}</span>
-                                    <div>
+                                    <div class="flex items-center space-x-2">
                                         <a href="{{ route('tasks.edit', $task->id) }}"
                                             class="text-blue-500 hover:text-blue-700">Edit</a>
                                         <form action="{{ route('tasks.destroy', $task->id) }}" method="POST"
@@ -75,7 +75,8 @@
             });
         </script>
         <script>
-            function toggleTaskCompletion(taskId) {
+            function toggleTaskCompletion(event, taskId) {
+                event.stopPropagation();
                 fetch(`/tasks/${taskId}/toggle`, {
                         method: 'POST',
                         headers: {
