@@ -4,10 +4,14 @@
             {{ __('Your Tasks') }}
         </h2>
     </x-slot>
+
     @auth
+        <!-- Authenticated User Content -->
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
+
+                    <!-- Form to Add a New Task -->
                     <form action="{{ route('tasks.store') }}" method="POST">
                         @csrf
                         <div class="mb-4">
@@ -16,10 +20,12 @@
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                         </div>
                         <button type="submit"
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Add
-                            Task</button>
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            Add Task
+                        </button>
                     </form>
-                    <!-- Display Tasks -->
+
+                    <!-- Display Task List -->
                     <div class="mt-6">
                         <h3 class="text-lg font-semibold text-gray-800 mb-4">Task List</h3>
                         <ul id="task-list">
@@ -46,21 +52,21 @@
                 </div>
             </div>
         </div>
-        <!-- Include Sortable.js -->
-        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.3/Sortable.min.js">
-            integrity = "sha512-YyVDehBlx1UBi2M4lptzRVE3HECeD5Gf28Dh7hmde3FSKMy57MGoCUWPRCrp2gNqx7xjQ5ANe1Tf4PE8FwXK6Q=="
-            crossorigin = "anonymous"
-            referrerpolicy = "no-referrer" >
-        </script>
+
+        <!-- Include Sortable.js for Drag-and-Drop Sorting -->
+        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.3/Sortable.min.js"
+            integrity="sha512-YyVDehBlx1UBi2M4lptzRVE3HECeD5Gf28Dh7hmde3FSKMy57MGoCUWPRCrp2gNqx7xjQ5ANe1Tf4PE8FwXK6Q=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
         <script>
-            // Make task list sortable 
+            // Initialize Sortable.js on the task list
             var el = document.getElementById('task-list');
             var sortable = Sortable.create(el, {
                 animation: 150,
                 onEnd: function(evt) {
-                    // Handle task reordering and send updated order to server 
+                    // Handle task reordering and send updated order to server
                     var order = sortable.toArray();
-                    // Send order to server 
+                    // Send order to server
                     fetch('{{ route('tasks.reorder') }}', {
                         method: 'POST',
                         headers: {
@@ -73,14 +79,14 @@
                     });
                 }
             });
-        </script>
-        <script>
+
+            // Function to toggle task completion status
             function toggleTaskCompletion(event, taskId) {
                 event.stopPropagation();
                 const taskElement = document.querySelector(`li[data-id="${taskId}"]`);
                 taskElement.classList.toggle('completed');
 
-                // Optionally, you can update the backend about the task completion status
+                // Optionally, update the backend about the task completion status
                 fetch(`/tasks/${taskId}/toggle`, {
                     method: 'POST',
                     headers: {
@@ -97,7 +103,7 @@
             }
         </script>
 
-        {{-- CSS to apply the strikethrough effect for completed tasks --}}
+        <!-- CSS for Strikethrough Effect on Completed Tasks -->
         <style>
             .task span {
                 margin: 0;
@@ -108,7 +114,9 @@
             }
         </style>
     @endauth
+
     @guest
+        <!-- Content for Guests -->
         <p>Please <a href="{{ route('login') }}">log in</a> to manage your tasks.</p>
     @endguest
 </x-app-layout>
