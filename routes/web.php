@@ -43,7 +43,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Home Route
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('dashboard');
 
 // Profile Management Routes (require authentication)
 Route::middleware('auth')->group(function () {
@@ -51,6 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update'); // Update Profile
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); // Delete Profile
     Route::put('/profile/picture', [ProfileController::class, 'updatePicture'])->name('profile.update.picture'); // Update Profile Picture
+    Route::delete('/profile/picture/{id}', [ProfileController::class, 'deletePicture'])->name('profile.delete.picture');
     Route::post('/profile/update-documents', [ProfileController::class, 'updateDocuments'])->name('profile.updateDocuments'); // Update Profile Documents
 });
 

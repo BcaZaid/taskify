@@ -26,6 +26,18 @@
                     <p>Email: {{ Auth::user()->email }}</p>
                 </div>
             </div>
+            <!-- Display Uploaded Images -->
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-4">
+                <div class="p-6 text-gray-900">
+                    <h4 class="text-md font-semibold text-gray-800 mb-4">Your Uploaded Images</h4>
+                    <div class="grid grid-cols-3 gap-4">
+                        @foreach ($documents as $document)
+                            <div> <img src="{{ asset('storage/' . $document->file_path) }}"
+                                    class="rounded w-full h-auto" alt="Uploaded Image"> </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </x-app-layout>

@@ -37,7 +37,12 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         @foreach ($user->documents as $document)
                             <div> <img src="{{ Storage::url($document->file_path) }}" alt="Uploaded Image"
-                                    class="rounded-lg w-full h-auto"> </div>
+                                    class="rounded-lg w-full h-auto">
+                                <form action="{{ route('profile.delete.picture', $document->id) }}" method="POST"
+                                    onsubmit="return confirm('Are you sure you want to delete this image?');"> @csrf
+                                    @method('DELETE') <button type="submit" class="btn btn-danger mt-2">Delete</button>
+                                </form>
+                            </div>
                         @endforeach
                     </div>
                 </div>

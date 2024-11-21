@@ -127,4 +127,15 @@ class ProfileController extends Controller
         // Redirect back with a success message
         return redirect()->route('profile.edit')->with('success', 'Documents uploaded successfully!');
     }
+    // ProfileController.php
+    public function deletePicture($id)
+    {
+        $document = Document::findOrFail($id);
+        if ($document->user_id === auth()->id()) {
+            Storage::disk('public')->delete($document->file_path);
+            $document->delete();
+            return redirect()->route('profile.edit')->with('success', 'Image deleted successfully!');
+        }
+        return redirect()->route('profile.edit')->with('error', 'You are not authorized to delete this image.');
+    }
 }
