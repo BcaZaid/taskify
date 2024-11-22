@@ -57,4 +57,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Document::class);
     }
+    public function getProfileImageAttribute()
+    {
+        return $this->profile_picture ? asset('storage/' . $this->profile_picture) : asset('images/default-user.png');
+    }
 }
