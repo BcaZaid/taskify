@@ -40,10 +40,12 @@
                 </a>
             @endif
 
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-            <a href="{{ route('google.redirect') }}" class="btn btn-google">Sign in with Google</a>
+            <x-primary-button class="ms-3 whitespace-nowrap"> {{ __('Log in') }} </x-primary-button>
+            <a href="{{ route('google.redirect') }}"
+                class="ms-1 whitespace-nowrap inline-flex items-center px-2 py-1 bg-blue-500 border border-transparent rounded-md font-semibold text-white uppercase tracking-widest hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                {{ __('Sign in with Google') }}
+            </a>
+
         </div>
     </form>
 </x-guest-layout>
