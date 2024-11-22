@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\HomeController;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\WelcomeEmail;
 
 // Google Authentication Routes
 Route::get('/auth/google/redirect', function () {
@@ -25,11 +27,17 @@ Route::get('/auth/google/callback', function () {
         'password' => bcrypt(Str::random(16)), // Assign a random password
     ]);
 
+    // Check if the user is newly created 
+    if ($user->wasRecentlyCreated) {
+        // Send the welcome email 
+        Mail::to($user->email)->send(new WelcomeEmail($user));
+    }
+
     // Log in the user
     Auth::login($user);
 
     // Redirect to the dashboard
-    return redirect('/dashboard');
+    return redirect('/home');
 })->name('google.callback');
 
 // Basic Route to Welcome Page
