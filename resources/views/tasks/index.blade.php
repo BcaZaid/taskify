@@ -31,8 +31,8 @@
                                     <div class="flex items-center space-x-2">
                                         <a href="{{ route('tasks.edit', $task->id) }}"
                                             class="text-blue-500 hover:text-blue-700">Edit</a>
-                                        <form action="{{ route('tasks.destroy', $task->id) }}" method="POST"
-                                            class="inline">
+                                        <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" class="inline"
+                                            onsubmit="return confirmDelete()">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
@@ -46,6 +46,12 @@
                 </div>
             </div>
         </div>
+        <script>
+            function confirmDelete() {
+                return confirm('Are you sure you want to delete this task?');
+                event.stopPropagation();
+            }
+        </script>
         <!-- Include Sortable.js -->
         <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.3/Sortable.min.js">
             integrity = "sha512-YyVDehBlx1UBi2M4lptzRVE3HECeD5Gf28Dh7hmde3FSKMy57MGoCUWPRCrp2gNqx7xjQ5ANe1Tf4PE8FwXK6Q=="
