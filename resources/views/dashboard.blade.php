@@ -10,7 +10,9 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="mt-2 mr-2 float-right">
                     <img src="{{ Auth::user()->profile_picture && !str_contains(Auth::user()->profile_picture, 'images/default-profile.png')
-                        ? Auth::user()->profile_picture
+                        ? (str_contains(Auth::user()->profile_picture, 'http')
+                            ? Auth::user()->profile_picture
+                            : asset('storage/' . Auth::user()->profile_picture))
                         : asset('images/default-profile.png') }}"
                         alt="Profile Picture" class="rounded-full w-32 h-32">
                 </div>

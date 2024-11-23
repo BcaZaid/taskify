@@ -51,19 +51,21 @@ class ProfileController extends Controller
     {
         // Validate the uploaded picture
         $request->validate([
-            'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // Ensure the image is within the size limit
         ]);
 
         $user = auth()->user();
 
         if ($request->hasFile('profile_picture')) {
-            // Delete old profile picture if it exists
-            if ($user->profile_picture) {
-                Storage::delete($user->profile_picture);
+            // Delete old profile picture if it exists and it's not the default image
+            if ($user->profile_picture && !str_contains($user->profile_picture, 'images/default-profile.png')) {
+                Storage::delete('public/' . $user->profile_picture); // Ensure the path is correct with 'public' disk prefix
             }
 
             // Store new profile picture
             $path = $request->file('profile_picture')->store('profile_pictures', 'public');
+
+            // Update user's profile picture path
             $user->profile_picture = $path;
         }
 
