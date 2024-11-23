@@ -17,10 +17,10 @@
             Profile Picture</button>
     </form>
 
-    @if (auth()->user()->profile_picture)
-        <div class="mt-4">
-            <img src="{{ asset('storage/' . auth()->user()->profile_picture) }}" alt="Profile Picture"
-                class="rounded-full w-32 h-32">
-        </div>
-    @endif
+    <div class="mt-4">
+        <img src="{{ Auth::user()->profile_picture && !str_contains(Auth::user()->profile_picture, 'images/default-profile.png')
+            ? Auth::user()->profile_picture
+            : asset('images/default-profile.png') }}"
+            alt="Profile Picture" class="rounded-full w-32 h-32">
+    </div>
 </div>

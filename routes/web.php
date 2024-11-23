@@ -9,6 +9,7 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\WelcomeEmail;
+use App\Http\Controllers\Auth\GoogleController;
 
 // Google Authentication Routes
 Route::get('/auth/google/redirect', function () {
@@ -24,6 +25,7 @@ Route::get('/auth/google/callback', function () {
     ], [
         'name' => $googleUser->getName(),
         'google_id' => $googleUser->getId(),
+        'profile_picture' => $googleUser->getAvatar(), // Store the profile picture URL
         'password' => bcrypt(Str::random(16)), // Assign a random password
     ]);
 

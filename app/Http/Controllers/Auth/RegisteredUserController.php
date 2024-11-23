@@ -39,13 +39,25 @@ class RegisteredUserController extends Controller
             'password.regex' => 'The password must contain at least one number, one uppercase letter, one lowercase letter, and one special character.',
         ]);
 
+        $ProfilePicture = '/images/default-profile.png';
+
+        // Check if the registration is from Google
+        if ($request->has('google_user')) {
+            // Get Google user data from the request (assuming you are passing Google user data)
+            $googleUser = $request->get('google_user');
+
+            // Set the Google profile picture if available
+            $profilePicture = $googleUser->getAvatar();
+        }
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'profile_picture' => $ProfilePicture,
         ]);
 
-        Mail::to($user->email)->send(new WelcomeEmail($user));
+        // Mail::to($user->email)->send(new WelcomeEmail($user));
 
         event(new Registered($user));
         Auth::login($user);
