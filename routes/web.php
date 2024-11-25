@@ -5,11 +5,12 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\HomeController;
-use Illuminate\Support\Facades\Mail;
 use App\Mail\WelcomeEmail;
-use App\Http\Controllers\Auth\GoogleController;
 
 // Google Authentication Routes
 Route::get('/auth/google/redirect', function () {
@@ -17,29 +18,40 @@ Route::get('/auth/google/redirect', function () {
 })->name('google.redirect');
 
 Route::get('/auth/google/callback', function () {
-    $googleUser = Socialite::driver('google')->stateless()->user();
+    try {
+        $googleUser = Socialite::driver('google')->stateless()->user();
 
-    // Find or create user logic with a default password value
-    $user = User::updateOrCreate([
-        'email' => $googleUser->getEmail(),
-    ], [
-        'name' => $googleUser->getName(),
-        'google_id' => $googleUser->getId(),
-        'profile_picture' => $googleUser->getAvatar(), // Store the profile picture URL
-        'password' => bcrypt(Str::random(16)), // Assign a random password
-    ]);
+        // Download and save Google profile picture locally
+        $avatarUrl = $googleUser->getAvatar();
+        $avatarPath = 'profile_pictures/' . uniqid() . '.jpg';
+        Storage::disk('public')->put($avatarPath, file_get_contents($avatarUrl));
 
-    // Check if the user is newly created 
-    if ($user->wasRecentlyCreated) {
-        // Send the welcome email 
-        Mail::to($user->email)->send(new WelcomeEmail($user));
+        // Find or create user logic with a default password value
+        $user = User::updateOrCreate([
+            'email' => $googleUser->getEmail(),
+        ], [
+            'name' => $googleUser->getName(),
+            'google_id' => $googleUser->getId(),
+            'profile_picture' => $avatarPath, // Store the local profile picture path
+            'password' => bcrypt(Str::random(16)), // Assign a random password
+        ]);
+
+        // Check if the user is newly created 
+        if ($user->wasRecentlyCreated) {
+            // Send the welcome email 
+            Mail::to($user->email)->send(new WelcomeEmail($user));
+        }
+
+        // Log in the user
+        Auth::login($user);
+
+        // Redirect to the dashboard
+        return redirect('/home');
+    } catch (\Exception $e) {
+        // Log error for debugging
+        logger()->error('Google Authentication Error: ' . $e->getMessage());
+        return redirect('/')->with('error', 'Unable to authenticate with Google.');
     }
-
-    // Log in the user
-    Auth::login($user);
-
-    // Redirect to the dashboard
-    return redirect('/home');
 })->name('google.callback');
 
 // Basic Route to Welcome Page

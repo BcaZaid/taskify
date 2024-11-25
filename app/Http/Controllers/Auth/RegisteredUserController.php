@@ -9,6 +9,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use App\Mail\WelcomeEmail;
@@ -41,13 +44,23 @@ class RegisteredUserController extends Controller
 
         $ProfilePicture = '/images/default-profile.png';
 
-        // Check if the registration is from Google
         if ($request->has('google_user')) {
             // Get Google user data from the request (assuming you are passing Google user data)
             $googleUser = $request->get('google_user');
 
-            // Set the Google profile picture if available
-            $profilePicture = $googleUser->getAvatar();
+            if ($googleUser->getAvatar()) {
+                // Download the profile picture
+                $imageContents = Http::get($googleUser->getAvatar())->body();
+
+                // Generate a unique filename
+                $filename = 'profile_pictures/' . Str::random(40) . '.jpg';
+
+                // Save the image to storage
+                Storage::disk('public')->put($filename, $imageContents);
+
+                // Update the profile picture path
+                $profilePicture = $filename;
+            }
         }
 
         $user = User::create([
@@ -57,7 +70,7 @@ class RegisteredUserController extends Controller
             'profile_picture' => $ProfilePicture,
         ]);
 
-        // Mail::to($user->email)->send(new WelcomeEmail($user));
+        Mail::to($user->email)->send(new WelcomeEmail($user));
 
         event(new Registered($user));
         Auth::login($user);
